@@ -29,15 +29,16 @@ graphs as metric-measure spaces and introduces a Wasserstein distance variant,
 ## Usage
 
 This repo comes equipped with the actual distance measures and with a lightweight 
-mapper implementation that the distance measures are built around. The mapper builder
-objects automatically create a networkx object that can be used for visualization. The
-basic procedure for generating a network and using a network metric is:
+mapper implementation that the distance measures are built around. The lightweight mapper
+is not built to scale - other more robust implementations are available elsewhere.
+ The mapper builder objects automatically create a networkx object that can be used for
+  visualization. The basic procedure for generating a network and using a network metric is:
 
 ```python
-from lightweight_mapper.clustering import SingleLinkageHistogram
-from lightweight_mapper.networks import Network, Cover, Partition
-from lightweight_mapper.partitioners import UniformPartitioner
-from distances import naw_distance
+from mapper_distances.lightweight_mapper.clustering import SingleLinkageHistogram
+from mapper_distances.lightweight_mapper.networks import Network, Cover, Partition
+from mapper_distances.lightweight_mapper.partitioners import UniformPartitioner
+from mapper_distances.distances import naw_distance
 
 metric_space = pairwise_distances(X) # Create finite metric space
 partition = UniformPartitioner() # Create partitioner
