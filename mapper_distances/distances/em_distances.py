@@ -215,16 +215,8 @@ def exact_gw(D1, D2, mu1, mu2, tol=.001, p=1, mode='stable'):
     return .5 * compute_gw_from_transport(results, D1, D2)
 
 
-def lb_fused_gw(D1, D2, Dp, mu1, mu2, tol=.001, p=1, mode='stable'):
-    """ Calculates exact Gromov-Wasserstein distance (to tol) via
-    the iterative algorithm discussed in Memoli (2011) and first
-    documented in Hendrikson (2016).
-
-    Breaks down the quadratic optimization program min_T T'GT into a series
-    of linear programs min_T_(n) T_(n)'GT_(n-1) treating T_(n-1) as fixed on each
-    iteration. Initial values of T are populated by computing a lower bound
-    which is the transport plan between nodes with the cost being the differences
-    between the eccentricities.
+def naw_calc(D1, D2, Dp, mu1, mu2, tol=.001, p=1, mode='stable'):
+    """ Calculates exact NAW distances using GLOP. POT implementation appears to be faster.
 
     Params
     ---------
@@ -243,7 +235,7 @@ def lb_fused_gw(D1, D2, Dp, mu1, mu2, tol=.001, p=1, mode='stable'):
 
     returns:
     ----------
-    Gromov-Wasserstein distance (I hope)
+    NAW distance
 
 
     """
@@ -282,16 +274,8 @@ def lb_fused_gw(D1, D2, Dp, mu1, mu2, tol=.001, p=1, mode='stable'):
     return result_value, transport_matrix
 
 
-def lb_fused_gw_pot(D1, D2, Dp, mu1, mu2, tol=.001, p=1, mode='stable'):
-    """ Calculates exact Gromov-Wasserstein distance (to tol) via
-    the iterative algorithm discussed in Memoli (2011) and first
-    documented in Hendrikson (2016).
-
-    Breaks down the quadratic optimization program min_T T'GT into a series
-    of linear programs min_T_(n) T_(n)'GT_(n-1) treating T_(n-1) as fixed on each
-    iteration. Initial values of T are populated by computing a lower bound
-    which is the transport plan between nodes with the cost being the differences
-    between the eccentricities.
+def naw_calc_pot(D1, D2, Dp, mu1, mu2, tol=.001, p=1, mode='stable'):
+    """ Calculates exact NAW distance using POT's EMD functions. 
 
     Params
     ---------
@@ -310,7 +294,7 @@ def lb_fused_gw_pot(D1, D2, Dp, mu1, mu2, tol=.001, p=1, mode='stable'):
 
     returns:
     ----------
-    Gromov-Wasserstein distance (I hope)
+    NAW distance
 
 
     """
@@ -500,6 +484,8 @@ def gromov_wasserstein_aug(net1, net2, metric_space):
 
 
 def naw_distance(net1, net2, metric_space, p=None, q=None):
+    """ Wraps the lightweight mapper network objects to calculate NAW
+    """
     C1 = network_merge_distance(net1, net1, metric_space)
     C1 = C1  # /C1.max()
     C1_span = sparse.csgraph.minimum_spanning_tree(C1)
@@ -529,7 +515,7 @@ def naw_distance(net1, net2, metric_space, p=None, q=None):
         q = np.diag(net2.adjacency_matrix.toarray())
         q = q / q.sum()
 
-    gw_dist, params = lb_fused_gw(dists1_short, dists2_short, C3, p, q, tol=.05)
+    gw_dist, params = naw_calc_pot(dists1_short, dists2_short, C3, p, q, tol=.05)
     return .5 * gw_dist, params
 
 
