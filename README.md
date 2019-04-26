@@ -45,7 +45,7 @@ partition = UniformPartitioner() # Create partitioner
 cover1 = partition.fit_transform(X[:, 0], 130, .7, 'PCA1') # Define cover parameters
 cover2 = partition.fit_transform(X[:, 1], 130, .7, 'PCA2') # Define cover parameters
 cover = [cover1, cover2] # Create cross product cover
-cluster = SingleLinkageHistogram(metric='precomputed', threshold = 'histogram') # Any sklearn API compatible clusterer
+cluster = SingleLinkageHistogram(metric='precomputed', threshold = 'histogram') # Any sklearn API compatible clusterer that takes a precomputed metric
 
 network1 = Network(metric_space, cover, cluster, prune=True)
 
