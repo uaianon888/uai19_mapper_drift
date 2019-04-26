@@ -54,7 +54,3 @@ network1 = Network(metric_space, cover, cluster, prune=True)
 distance = naw_distance(network1, network2, metric_space)
 ```
 
-
-## Examples
-Examples can be found in [examples](https://github.com/uaianon888/uai19_mapper_drift) 
-
