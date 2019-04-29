@@ -46,6 +46,18 @@ def network_merge_distance(net1, net2, metric_space):
 def node_merge_distances_opt(node1, node2, metric_space):
     """ Returns the size of the neighborhood expansion that would
     be required for node1 to subsume node2.
+    
+    Parameters
+    ----------
+    node1 : set[int]
+        Set of integers corresponding to points in the space contained by the node
+    node2 : set[int]
+        Set of integers corresponding to points in the space contained by the node
+    metric_space : np.array
+        n x n array containing pairwise distances in the metric space.
+    Returns
+    -------
+    dist : float
     """
     node_diff = node2.difference(node1)
     if len(node_diff) == 0:
@@ -56,15 +68,27 @@ def node_merge_distances_opt(node1, node2, metric_space):
         for n1 in node1:
             min_val = min(min_val, metric_space[n1, n2])
         max_val = max(max_val, min_val)
-    return max_val 
+    return max_val
 
 
 @jit(nopython=True)
 def node_mutual_merge_distance_opt(node1, node2, metric_space):
-    """ Returns the size of larger of the neighborhood expansions that 
+    """ Returns the size of larger of the neighborhood expansions that
     would be required node1 to subsume node2 or vice versa.
 
     This is the Hausdorff distance for the nodes.
+    
+    Parameters
+    ----------
+    node1 : set[int]
+        Set of integers corresponding to points in the space contained by the node
+    node2 : set[int]
+        Set of integers corresponding to points in the space contained by the node
+    metric_space : np.array
+        n x n array containing pairwise distances in the metric space.
+    Returns
+    -------
+    dist : float
     """
     return max(node_merge_distances_opt(node1, node2, metric_space),
                node_merge_distances_opt(node2, node1, metric_space))
